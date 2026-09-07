@@ -1,0 +1,30 @@
+# Web 框架
+fastapi>=0.115.0
+uvicorn[standard]>=0.30.0
+python-multipart>=0.0.9
+
+# 配置与数据模型
+pydantic>=2.7.0
+pydantic-settings>=2.3.0
+
+# 向量库与检索
+chromadb>=0.5.0
+rank-bm25>=0.2.2
+jieba>=0.42.1
+
+# Embedding（本地模型）
+sentence-transformers>=3.0.0
+
+# LLM 调用（OpenAI 兼容协议）
+openai>=1.40.0
+
+# 文档解析
+pypdf>=4.0.0
+python-docx>=1.1.0
+
+# 前端演示
+streamlit>=1.36.0
+
+# 进度展示与测试
+tqdm>=4.66.0
+pytest>=8.0.0

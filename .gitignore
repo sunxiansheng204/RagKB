@@ -1,0 +1,18 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# 环境配置（含密钥）
+.env
+
+# 数据与索引（运行时产物）
+data/chroma_db/
+data/index/
+data/reports/
+
+# IDE
+.idea/
+.vscode/
