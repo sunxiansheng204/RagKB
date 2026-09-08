@@ -1,6 +1,15 @@
+<div align="center">
+
 # RagKB · 企业级 RAG 知识库问答系统
 
-一个**可工程化落地**的检索增强生成（RAG）知识库问答系统，覆盖「文档入库 → 混合检索 → 引用溯源 → 流式生成 → 效果评估」全链路。适合作为 **AI 大模型应用工程师 / LLM 应用开发**方向的面试项目与简历亮点。
+**可工程化落地的 RAG 知识库问答系统**，覆盖「文档入库 → 混合检索 → 引用溯源 → 流式生成 → 效果评估」全链路。
+
+`Python` · `FastAPI` · `ChromaDB` · `sentence-transformers` · `Streamlit` · `OpenAI 兼容协议`
+
+[![license](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
+[![python](https://img.shields.io/badge/Python-3.10%2B-3776AB.svg)](https://www.python.org/)
+
+</div>
 
 ## 技术亮点（一句话版）
 
@@ -126,26 +135,6 @@ RagKB/
 └── data/                    # 知识库文档 / 向量持久化 / 评估报告
 ```
 
-## 简历项目描述（可直接改写） 
-
-> **企业级 RAG 知识库问答系统（个人项目）**
-> - 独立设计并实现一套端到端 RAG 问答系统，支持多格式文档（PDF/Word/Markdown）入库、增量索引与全量重建；
-> - 采用「向量检索 + BM25 关键词检索 + RRF 融合」混合检索方案，解决专名漏召回问题；引入 BGE 重排序进一步提升 top-K 精度；
-> - 构建引用溯源机制，回答自动标注来源编号并可回看原文，有效抑制幻觉；通过 SSE 实现检索/生成两阶段流式输出，优化交互体验；
-> - 自建 LLM-as-Judge 评估体系（忠实度、回答相关度、检索命中率），并从知识块自动生成评估集，支撑检索与提示词的可量化迭代；
-> - 技术栈：Python · FastAPI · ChromaDB · sentence-transformers · OpenCLIP/RRF · Streamlit · OpenAI 兼容协议。
-
-## 面试高频考点（项目可深挖）
-
-1. 为什么向量检索 + BM25 混合？RRF 为什么用排名而不是分数？
-2. 切分块大小/重叠窗口如何调优？对检索精度的影响是什么？
-3. 如何量化"RAG 效果变好了"？评估集从哪来？忠实度与相关度的区别？
-4. 引用溯源怎么实现？它如何抑制幻觉？
-5. 流式输出怎么实现？SSE 与 WebSocket 的取舍？
-6. Embedding 本地与 API 如何优雅切换？维度不一致如何处理？
-7. 知识更新：如何只更新受影响切片而不是全量重建？
-8. 生产化还差什么？（缓存、可观测、限流、多租户隔离、权限）
-
 ## Roadmap（加分方向）
 
 - [ ] 检索结果重排序（`USE_RERANKER=true` 已预留，需下载 bge-reranker-base）
@@ -155,6 +144,15 @@ RagKB/
 - [ ] 知识库权限与多租户隔离
 - [ ] 缓存（向量缓存 / 回答缓存）与可观测性上报
 
-## 说明
+## 贡献指南（Contributing）
 
-- 本项目为标准软件交付，不携带任何密钥，LLM / Embedding 均通过 `.env` 由使用者自行配置，可安全用于简历项目与开源。
+欢迎提交 Issue 与 Pull Request：如果你在检索召回、文档切分、评估指标上发现了可优化之处，或希望补充新的文档格式 / LLM 后端 / Embedding 模型，请直接提 Issue 讨论，也欢迎直接提交 PR。
+
+## License
+
+[MIT](LICENSE)
+
+## 声明
+
+- 本项目为标准软件交付，**不携带任何密钥**，LLM / Embedding 均通过 `.env` 由使用者自行配置；
+- 默认演示模式下仅监听 `127.0.0.1`，对外开放前请务必阅读上方「安全配置」章节。
