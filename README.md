@@ -19,6 +19,14 @@
 - **效果评估**：自建 LLM-as-Judge 指标体系（忠实度 / 回答相关度 / 检索命中率），支持从知识块自动生成评估集；
 - **双后端可插拔**：Embedding 支持本地 `sentence-transformers` 与 OpenAI 兼容 API；LLM 统一走 OpenAI 兼容协议（Ollama / DeepSeek / 火山方舟 / OpenAI 均可）。
 
+## 运行效果
+
+> 本地一键部署的真实问答截图（LLM: Ollama qwen2.5:7b，Embedding: BGE-small-zh 本地模型）：回答自动标注来源编号 `[1][2]`，下方可展开原始片段溯源。
+
+<p align="center">
+  <img src="img/ragkb_screenshot.png" alt="RagKB 运行效果" width="80%"/>
+</p>
+
 ## 架构概览
 
 ```
