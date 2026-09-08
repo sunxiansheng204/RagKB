@@ -66,15 +66,45 @@ python -m scripts.run_eval --force-gen           # 效果评估
 
 接口速览（`http://127.0.0.1:8000/api-docs` 可在线调试）：
 
-| 方法 | 路径 | 说明 |
+| 方法 | 路径 | 说明 | 鉴权 |
+| --- | --- | --- | --- |
+| POST | /chat | 同步问答，返回答案 + 引用来源 | Bearer Token* |
+| POST | /chat/stream | SSE 流式问答 | Bearer Token* |
+| POST | /docs/upload | 上传 md/txt/pdf/docx（≤ `MAX_UPLOAD_MB`） | Bearer Token* |
+| GET/DELETE | /docs, /docs/{id} | 列出 / 删除文档 | Bearer Token* |
+| POST | /docs/rebuild | 全量重建索引 | Bearer Token* |
+| POST | /eval/run | 运行 RAG 效果评估 | Bearer Token* |
+| GET | /health | 健康检查 + 鉴权状态 | 公开 |
+
+\* 演示模式下（`API_TOKEN` 留空）所有接口不校验，仅建议本机使用；生产部署请配置 `API_TOKEN` 开启全量鉴权。
+
+## 安全配置（重要）
+
+默认处于**演示模式**：仅监听 `127.0.0.1` + CORS 白名单仅放行本机前端。对外开放前请务必完成以下加固：
+
+| 配置项 | 默认值 | 说明 |
 | --- | --- | --- |
-| POST | /chat | 同步问答，返回答案 + 引用来源 |
-| POST | /chat/stream | SSE 流式问答 |
-| POST | /docs/upload | 上传 md/txt/pdf/docx |
-| GET/DELETE | /docs, /docs/{id} | 列出 / 删除文档 |
-| POST | /docs/rebuild | 全量重建索引 |
-| POST | /eval/run | 运行 RAG 效果评估 |
-| GET | /health | 健康检查 |
+| `API_TOKEN` | 空（演示模式） | 非空即启用 Bearer Token 鉴权，所有接口须携带 `Authorization: Bearer <token>`，否则 401 |
+| `CORS_ORIGINS` | `http://127.0.0.1:8501,http://localhost:8501` | 前端域名白名单（逗号分隔），禁止使用 `*`，防止任意网页跨域调用接口 |
+| `HOST` | `127.0.0.1` | 对外提供访问时改为 `0.0.0.0`，**必须**同时配置 `API_TOKEN` |
+| `MAX_UPLOAD_MB` | `50` | 单文件上传大小上限，防止超大文件拖垮内存 |
+
+生成随机 Token 并配置到 `.env`：
+
+```bash
+python -c "import secrets; print(secrets.token_urlsafe(32))"
+# API_TOKEN=<上面输出的值>
+```
+
+带鉴权调用示例：
+
+```bash
+curl -H "Authorization: Bearer <token>" http://127.0.0.1:8000/docs
+```
+
+`GET /health` 会返回 `auth: {"auth_enabled": true/false}`，便于部署后自查鉴权是否生效。
+
+安全设计说明：本系统对用户上传的文档内容做**不可信处理**——提示词中显式约束模型将文档中的指令性内容一律视为数据而非指令，降低提示注入风险。
 
 ## 项目结构
 

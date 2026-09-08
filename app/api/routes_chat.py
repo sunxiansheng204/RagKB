@@ -7,6 +7,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
 
+from app.api.security import verify_token
 from app.dependencies import get_rag
 from app.rag.qa import RAGEngine
 
@@ -26,7 +27,11 @@ class ChatResponse(BaseModel):
 
 
 @router.post("", response_model=ChatResponse)
-def chat(req: ChatRequest, rag: RAGEngine = Depends(get_rag)):
+def chat(
+    req: ChatRequest,
+    token: None = Depends(verify_token),
+    rag: RAGEngine = Depends(get_rag),
+):
     if not req.question.strip():
         raise HTTPException(400, "question 不能为空")
     result = rag.answer(req.question, req.history)
@@ -34,7 +39,11 @@ def chat(req: ChatRequest, rag: RAGEngine = Depends(get_rag)):
 
 
 @router.post("/stream")
-async def chat_stream(req: ChatRequest, rag: RAGEngine = Depends(get_rag)):
+async def chat_stream(
+    req: ChatRequest,
+    token: None = Depends(verify_token),
+    rag: RAGEngine = Depends(get_rag),
+):
     if not req.question.strip():
         raise HTTPException(400, "question 不能为空")
 

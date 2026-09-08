@@ -42,8 +42,30 @@ class Settings(BaseSettings):
     eval_report_dir: Path = PROJECT_ROOT / "data" / "reports"
 
     # ---------- 服务 ----------
-    host: str = "0.0.0.0"
+    # 默认仅监听本机回环地址；如需局域网访问再改为 0.0.0.0。
+    # 注意：改为 0.0.0.0 且未配置 RAGKB_API_TOKEN 时，任意内网主机均可调用接口，风险自担。
+    host: str = "127.0.0.1"
     port: int = 8000
+
+    # ---------- 安全 ----------
+    # 接口鉴权 Token（Bearer Token）。为空 = 演示模式（不校验，仅建议本机使用）；
+    # 非空 = 生产模式，所有接口须携带 Authorization: Bearer <token>，否则返回 401。
+    api_token: str = ""
+
+    # CORS 允许来源（严格白名单，禁止使用 *）。多个来源用英文逗号分隔。
+    # 默认放行本机 Streamlit 前端；生产部署时替换为实际前端域名。
+    cors_origins: str = "http://127.0.0.1:8501,http://localhost:8501"
+
+    # 单文件上传大小上限（MB），防止超大文件拖垮内存。
+    max_upload_mb: int = 50
+
+    @property
+    def cors_origin_list(self) -> list[str]:
+        return [o.strip() for o in self.cors_origins.split(",") if o.strip()]
+
+    @property
+    def max_upload_bytes(self) -> int:
+        return self.max_upload_mb * 1024 * 1024
 
 
 settings = Settings()

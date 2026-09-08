@@ -7,6 +7,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.api import routes_chat, routes_docs, routes_eval
+from app.api.security import get_auth_state
 from app.dependencies import get_pipeline, get_vector_store
 from config.settings import settings
 
@@ -33,10 +34,11 @@ app = FastAPI(
     docs_url="/api-docs",  # 内置 Swagger 让出 /docs 给业务路由
 )
 
+# CORS 严格白名单（由 settings.cors_origins 配置，禁止使用 *，避免任意网页跨域调用接口）
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
-    allow_methods=["*"],
+    allow_origins=settings.cors_origin_list,
+    allow_methods=["GET", "POST", "DELETE", "OPTIONS"],
     allow_headers=["*"],
 )
 
@@ -55,6 +57,7 @@ def health():
         "chunks": _vs().count(),
         "embedding_backend": settings.embedding_backend,
         "llm_model": settings.llm_model,
+        "auth": get_auth_state(),
     }
 
 

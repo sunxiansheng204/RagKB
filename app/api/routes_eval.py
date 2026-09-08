@@ -3,6 +3,7 @@ from __future__ import annotations
 
 from fastapi import APIRouter, Depends, Query
 
+from app.api.security import verify_token
 from app.dependencies import get_eval_runner, get_pipeline
 from app.eval.runner import EvalRunner
 from app.ingestion.pipeline import IngestionPipeline
@@ -14,6 +15,7 @@ router = APIRouter(prefix="/eval", tags=["eval"])
 def run_eval(
     max_samples: int = Query(20, ge=1, le=100),
     force_gen: bool = Query(False),
+    token: None = Depends(verify_token),
     runner: EvalRunner = Depends(get_eval_runner),
     pipeline: IngestionPipeline = Depends(get_pipeline),
 ):
